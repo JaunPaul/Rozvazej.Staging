@@ -1,0 +1,32 @@
+{
+  "name": "registration-form",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:staging": "vite build && surge dist --domain rozvzej-phased-form.surge.sh",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^6.1.1",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/svelte": "^5.2.9",
+    "@testing-library/user-event": "^14.6.1",
+    "@tsconfig/svelte": "^5.0.4",
+    "jsdom": "^27.3.0",
+    "svelte": "^5.38.1",
+    "svelte-check": "^4.3.1",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2",
+    "vitest": "^4.0.15"
+  },
+  "dependencies": {
+    "@foxentry/js-sdk": "^1.1.1",
+    "zod": "^4.1.3"
+  }
+}

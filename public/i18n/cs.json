@@ -1,0 +1,77 @@
+{
+  "steps.1": "Krok 1",
+  "steps.2": "Krok 2",
+  "steps.3": "Krok 3",
+
+  "step1.title": "Začínáme – nic složitého",
+  "step1.lead": "Na úvod nám stačí pár základních informací. Zvládnete to během chvilky.",
+
+  "labels.firstName": "Jméno",
+  "labels.lastName": "Přijmení",
+  "labels.phone": "Telefonní číslo",
+  "labels.email": "Email",
+  "labels.rc": "Rodné číslo",
+  "labels.citizenship": "Státní občanství",
+  "labels.street": "Ulice",
+  "labels.houseNumber": "Číslo popisné",
+  "labels.city": "Město",
+  "labels.zip": "PSČ",
+  "labels.bank.prefix": "Předčíslí",
+  "labels.bank.number": "Číslo bankovního účtu",
+  "labels.bank.code": "Kód banky",
+  "labels.doc.front": "Nahrajte ID/ jiný platný doklad.\nPŘEDNÍ STRANA",
+  "labels.doc.back": "Nahrajte ID/ jiný platný doklad.\nZADNÍ STRANA",
+
+  "hints.czPhone": "Pro rozvážení v České republice je nezbytné české telefonní číslo.",
+  "hints.useRealEmail": "Zvolte prosím email, který reálně používáte. Budou Vám na něj chodit důležité emaily.",
+
+  "ph.firstName": "Zde napište své křestní jméno",
+  "ph.lastName": "Zde napište své přijmení",
+  "ph.phone": "+420",
+  "ph.email": "Zadejte svou e-mailovou adresu",
+  "ph.rc": "Vaše rodné číslo",
+
+  "errors.firstName": "Zadejte prosím své jméno",
+  "errors.lastName": "Zadejte prosím své přijmení",
+  "errors.phone": "Zadejte české telefonní číslo ve formátu +420 XXX XXX XXX.",
+  "errors.email": "Zadejte prosím svůj email",
+  "errors.rc": "Zadejte platné rodné číslo.",
+  "errors.street": "Zadejte prosím název ulice",
+  "errors.houseNumber": "Zadejte prosím číslo popisné",
+  "errors.city": "Zadejte prosím město či obec",
+  "errors.zip": "Zadejte prosím poštovní směrovací číslo",
+  "errors.bankNumber": "Zadejte prosím vaše číslo účtu",
+
+  "nav.prev": "Předchozí",
+  "nav.next": "Pokračovat",
+  "nav.submit": "Odeslat",
+  "nav.wait": "Prosím čekejte..",
+
+  "step2.title": "Už jen pár údajů",
+  "step2.lead": "Tato část obsahuje povinné údaje potřebné k dokončení registrace – na jejich základě Vám připravíme smlouvu, proto je prosím vyplňte pečlivě.",
+
+  "step3.title": "Chcete mít registraci hotovou co nejrychleji?",
+  "step3.lead": "Následující údaje nejsou povinné, ale pokud je vyplníte už teď, budeme moci vše zpracovat rychleji a bez zbytečného čekání.",
+
+  "labels.cityToDeliver": "Město kde budete rozvážet",
+  "labels.transport": "Na čem budete rozvážet?",
+  "labels.insurance": "Zdravotní pojištovna",
+  "labels.pinkStatement": "Chcete uplatnit růžové prohlášení?",
+  "answer.yes": "ANO",
+  "answer.no": "NE",
+
+  "select.placeholder.state": "Vyberte stát",
+  "select.placeholder.city": "Vyberte jednu z možností....",
+  "select.placeholder.transport": "Vyberte způsob dopravy",
+  "select.placeholder.insurance": "Vyberte zdravotní pojišťovnu",
+  "select.placeholder.bank": "Vyberte banku",
+
+  "upload.button": "Nahrát soubor",
+  "upload.max": "Maximální velikost souboru 10 MB.",
+  "upload.error.size": "Nahrávání selhalo. Max. velikost souboru je 10 MB.",
+  "upload.error.type": "Nahrávání selhalo. Neplatný typ souboru.",
+  "upload.error.generic": "Nahrávání selhalo. Zkuste to prosím znovu.",
+
+  "result.success": "Děkujeme. Pracujeme na tom.",
+  "result.fail": "Oops! Something went wrong while submitting the form."
+}

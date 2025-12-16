@@ -1,0 +1,77 @@
+{
+  "steps.1": "Step 1",
+  "steps.2": "Step 2",
+  "steps.3": "Step 3",
+
+  "step1.title": "Let's start — easy stuff",
+  "step1.lead": "We only need a few basics to begin. This will take just a moment.",
+
+  "labels.firstName": "First name",
+  "labels.lastName": "Last name",
+  "labels.phone": "Phone number",
+  "labels.email": "Email",
+  "labels.rc": "National ID number",
+  "labels.citizenship": "Citizenship",
+  "labels.street": "Street",
+  "labels.houseNumber": "House number",
+  "labels.city": "City",
+  "labels.zip": "ZIP / Postal code",
+  "labels.bank.prefix": "Prefix",
+  "labels.bank.number": "Bank account number",
+  "labels.bank.code": "Bank code",
+  "labels.doc.front": "Upload ID / other valid document.\nFRONT SIDE",
+  "labels.doc.back": "Upload ID / other valid document.\nBACK SIDE",
+
+  "hints.czPhone": "For deliveries in the Czech Republic you must provide a Czech phone number.",
+  "hints.useRealEmail": "Use an email you actually check. Important messages will go there.",
+
+  "ph.firstName": "Type your first name",
+  "ph.lastName": "Type your last name",
+  "ph.phone": "+420",
+  "ph.email": "Enter your email address",
+  "ph.rc": "Your national ID number",
+
+  "errors.firstName": "Please enter your first name",
+  "errors.lastName": "Please enter your last name",
+  "errors.phone": "Enter a Czech phone number in the format +420 XXX XXX XXX.",
+  "errors.email": "Please enter your email",
+  "errors.rc": "Enter a valid national ID number.",
+  "errors.street": "Please enter the street name",
+  "errors.houseNumber": "Please enter the house number",
+  "errors.city": "Please enter the city or town",
+  "errors.zip": "Please enter the postal code",
+  "errors.bankNumber": "Please enter your bank account number",
+
+  "nav.prev": "Back",
+  "nav.next": "Continue",
+  "nav.submit": "Submit",
+  "nav.wait": "Please wait…",
+
+  "step2.title": "Just a few more details",
+  "step2.lead": "These mandatory details are needed to finish your registration and prepare the contract. Please fill them in carefully.",
+
+  "step3.title": "Want to finish even faster?",
+  "step3.lead": "The following fields are optional. If you add them now, we can process everything quicker without extra back‑and‑forth.",
+
+  "labels.cityToDeliver": "City you will deliver in",
+  "labels.transport": "What will you deliver on?",
+  "labels.insurance": "Health insurance",
+  "labels.pinkStatement": "Apply the “pink tax declaration”?",
+  "answer.yes": "YES",
+  "answer.no": "NO",
+
+  "select.placeholder.state": "Select a country",
+  "select.placeholder.city": "Choose an option…",
+  "select.placeholder.transport": "Select transport",
+  "select.placeholder.insurance": "Select health insurer",
+  "select.placeholder.bank": "Select a bank",
+
+  "upload.button": "Upload File",
+  "upload.max": "Max file size 10MB.",
+  "upload.error.size": "Upload failed. Max size is 10 MB.",
+  "upload.error.type": "Upload failed. Invalid file type.",
+  "upload.error.generic": "Upload failed. Something went wrong. Please retry.",
+
+  "result.success": "Thanks. We’re on it.",
+  "result.fail": "Oops! Something went wrong while submitting the form."
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + Svelte + TS</title>
+    <style>
+      .upload-button {
+        background-color: transparent;
+      }
+
+      .mt-4 {
+        margin-top: 16px;
+      }
+
+      .mr-2 {
+        margin-right: 8px;
+      }
+
+      .block {
+        display: block;
+      }
+
+      .field-error {
+        border-color: indianred;
+      }
+
+      .input-wrap.relative {
+        position: relative; /* anchor for the dropdown */
+        overflow: visible; /* avoid clipping */
+      }
+
+      /* 2) The floating suggestion panel */
+      .sugg {
+        position: absolute;
+        top: calc(100% + 6px); /* 6px gap below the input */
+        left: 0;
+        right: 0; /* match input width */
+        margin: 0;
+        padding: 4px;
+        list-style: none;
+
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08),
+          0 2px 6px rgba(0, 0, 0, 0.06);
+
+        max-height: 260px; /* scroll if many items */
+        overflow: auto;
+        z-index: 1000; /* sit above other UI */
+      }
+
+      /* hide if empty (defensive) */
+      .sugg:empty {
+        display: none;
+      }
+
+      /* 3) Items */
+      .sugg li {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: 8px;
+        cursor: pointer;
+        line-height: 1.25;
+      }
+
+      .sugg li + li {
+        margin-top: 2px;
+      }
+
+      .sugg li:hover,
+      .sugg li[aria-selected="true"] {
+        background: #f6f7f9;
+      }
+
+      .sugg li small {
+        color: #6b7280; /* muted */
+        font-size: 0.85em;
+      }
+      .errors {
+        list-style-type: none;
+        margin: 8px 0px 0px 0px;
+        padding: 0px 0px 8px 0px;
+        color: indianred;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="duo-section">
+      <div class="form-wrap-app">
+      <div id="app" class="multi-step-block"></div>
+      </div>
+      <div
+        id="w-node-bbf84c42-1309-ca45-9ba6-1cbc04e6032e-d6eb4364"
+        class="panel"
+      >
+    <div class="step-wrap">Step 1</div>
+    <div class="step-wrap">Step 2</div>
+    <div class="step-wrap">Step 3</div>
+    </div>
+    </section>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
