@@ -75,8 +75,8 @@
 {/if}
 
 {#if registrationState.formState === "success"}
-  <div class="w-form-done" style="display: block;">
-    <div>
+  <div class="message-container">
+    <div class="text-16px">
       {#if registrationState.submissionStatus === SubmissionStatus.APPROVED}
         {t("messages.success")}
       {:else}

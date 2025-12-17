@@ -165,6 +165,8 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "result.verifying.stage1": "Ověřování dat...",
     "result.verifying.stage2": "Kontrola stavu smlouvy...",
     "result.verifying.stage3": "Téměř hotovo...",
+
+    "message.success": "Formulář se zpracováná. Vyčkejte prosím...",
   },
   en: {
     "steps.1": "Step 1",
@@ -328,6 +330,9 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "result.verifying.stage1": "Verifying data...",
     "result.verifying.stage2": "Checking contract status...",
     "result.verifying.stage3": "Almost done...",
+
+    "message.success":
+      "Form submitted successfully. You are being redirected ...",
   },
 });
 

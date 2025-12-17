@@ -1,4 +1,4 @@
-import { t } from "../i18n/i18n.svelte";
+import { t, setLocale, type Locale } from "../i18n/i18n.svelte";
 import {
   validateEmail,
   validateName,
@@ -120,6 +120,8 @@ export class RegistrationState {
       this.loadFromSession();
       this.loadFromUrl();
       this.values.submitSource = this.getCompanyByDomain()[0];
+      let locale: Locale = $state(this.checkLanguage());
+      setLocale(locale);
 
       // Auto-detect phase based on URL param
       const params = new URLSearchParams(window.location.search);
@@ -156,7 +158,11 @@ export class RegistrationState {
       this.trackPageView(this.currentStep);
     }
   }
-
+  checkLanguage(): "cs" | "en" {
+    const path = typeof window !== "undefined" ? window.location.pathname : "";
+    if (path.endsWith("-en")) return "en";
+    return "cs";
+  }
   trackDropOff(step: string) {
     if (typeof window === "undefined") return;
     (window as any).dataLayer = (window as any).dataLayer || [];

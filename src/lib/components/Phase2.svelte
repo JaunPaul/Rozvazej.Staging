@@ -9,6 +9,7 @@
   import EuFileUpload from "./EuFileUpload.svelte";
   import NonEuFileUpload from "./NonEuFileUpload.svelte";
   import DriversLicenseUpload from "./DriversLicenseUpload.svelte";
+  import { onMount } from "svelte";
 
   let { registrationState }: { registrationState: RegistrationState } =
     $props();
@@ -51,7 +52,16 @@
 
   const today = new Date();
   const minPassportExpiry = toDateInputValue(today);
-  console.log("mount phase 2");
+  onMount(() => {
+    const panel = Array.from(
+      document.querySelectorAll<HTMLElement>(".panel-items")
+    );
+    if (panel.length) {
+      panel.forEach((el, i) => {
+        el.classList.toggle("hide");
+      });
+    }
+  });
 </script>
 
 <div class="form-step is-active">
