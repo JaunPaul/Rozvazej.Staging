@@ -37,8 +37,8 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "labels.bank.code": "Kód banky",
     "labels.doc.nationalId": `Nahrajte ID/ jiný platný doklad. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
     "labels.doc.euPassport": `Nahrajte svůj občanský průkaz. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
-    "labels.doc.nonEu": `Nahrajte následující platné dokumenty. <br /><span class="bold-green">1. Průkaz totožnosti</span><br /><span class="bold-green">2. Vízum NEBO povolení k pobytu NEBO pracovní povolení</span>`,
-    "labels.doc.driversLicense": `Nahrajte platný řidičský průkaz. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br />`,
+    "labels.doc.nonEu": `Nahrajte následující platné dokumenty. <br /><span class="bold-green">1. Vízum NEBO povolení k pobytu NEBO pracovní povolení</span>`,
+    "labels.doc.driversLicense": `Nahrajte platný řidičský průkaz. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
     "labels.deliveryCompany":
       "Neomezujte se - u nás můžete jezdit pro všechny tři služby najednou: Bolt, Wolt i Foodora. Více platforem = více objednávek = vyšší výdělky. Stačí si zvolit, kde chcete začít!",
     "labels.documentNumberEu": "Číslo občanského průkazu ",
@@ -56,11 +56,11 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "hints.doc.euPassport":
       "Nahrajte přední i zadní stranu svého občanského průkazu.",
     "hints.doc.nonEu":
-      "*Tyto dokumenty jsou vyžadovány. Občanský průkaz (přední i zadní strana) nebo cestovní pas, vízum nebo povolení k pobytu, studijní nebo pracovní povolení.",
+      "*Tyto dokumenty jsou vyžadovány: vízum NEBO povolení k pobytu NEBO studijní/pracovní povolení.",
     "hints.pinkstatement":
       'Pokud zvolíte ANO, uplatníme u Vás slevu na dani a budete dostávat více peněz.<br><br> <strong>POZOR</strong> - "růžové prohlášení o dani" (neboli Prohlášení poplatníka k dani z příjmů fyzických osob) můžete mít vyplněné a uplatněné pouze u jednoho zaměstnavatele. To znamená, že pokud máte více pracovních smluv, nebo kombinujete zaměstnání a brigády, můžete tento nárok využít jen u jedné firmy.',
     "hints.doc.filesDriversLicense":
-      "Nahrajte jasnou fotografii nebo sken přední i zadní strany vašeho řidičského průkazu.",
+      "Nahrajte jasnou fotografii nebo sken svého řidičského průkazu.",
 
     "ph.firstName": "Např. Jan",
     "ph.lastName": "Např. Novák",
@@ -173,15 +173,15 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "steps.2": "Step 2",
     "steps.3": "Step 3",
 
-    "form.title": "Hotovo za méně než 2 minuty",
+    "form.title": "Done in under 2 minutes",
     "form.lead":
-      "Vyplňte pár základních údajů, abychom mohli připravit Vaši registraci. ",
-    "phase2.title": "Phase 2 title",
+      "Fill in a few basic details so we can prepare your registration.",
+    "phase2.title": "Final details",
 
-    "step1.title": "Osobní údaje",
-    "step2.title": "Vaše adresa",
-    "step3.title": "Občanství",
-    "step4.title": "Údaje pro výplatu",
+    "step1.title": "Personal details",
+    "step2.title": "Your address",
+    "step3.title": "Citizenship",
+    "step4.title": "Payout details",
 
     "labels.firstName": "First name",
     "labels.lastName": "Last name",
@@ -200,26 +200,41 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "labels.bank.prefix": "Prefix",
     "labels.bank.number": "Bank account number",
     "labels.bank.code": "Bank code",
+
     "labels.doc.nationalId": `Upload ID / other valid document. <br /><span class="bold-green">FRONT SIDE</span><br /><span class="bold-green">BACK SIDE</span>`,
-    "labels.doc.euPassport": `Upload your Identity card. <br /><span class="bold-green">FRONT SIDE</span><br /><span class="bold-green">BACK SIDE</span>`,
-    "labels.doc.nonEu": `Upload the following valid documents. <br /><span class="bold-green">ID CARD</span><br /><span class="bold-green">VISA OR RESIDENCE PERMIT</span><br /><span class="bold-green">STUDY OR PERMIT</span>`,
-    "labels.doc.driversLicense": `Upload valid driver's license. <br /><span class="bold-green">1. FRONT SIDE</span><br />`,
+    "labels.doc.euPassport": `Upload your identity card. <br /><span class="bold-green">FRONT SIDE</span><br /><span class="bold-green">BACK SIDE</span>`,
+
+    // ✅ Non-EU change: remove ID card requirement
+    "labels.doc.nonEu": `Upload the following valid documents. <br /><span class="bold-green">1. VISA OR RESIDENCE PERMIT OR WORK PERMIT</span>`,
+
+    // ✅ Driver’s license change: move both instructions into main green text
+    "labels.doc.driversLicense": `Upload a valid driver's license. <br /><span class="bold-green">1. FRONT SIDE</span><br /><span class="bold-green">2. BACK SIDE</span>`,
+
     "labels.deliveryCompany":
       "Don’t limit yourself - with us you can ride for all three services at once: Bolt, Wolt, and Foodora. More platforms = more orders = higher earnings. Just choose where you want to start!",
-    "labels.documentIssuingCountry": "Země vydání dokladu",
-    "labels.permanentResidenceCountry": "Země",
+
+    "labels.documentIssuingCountry": "Issuing country",
+    "labels.permanentResidenceCountry": "Country",
 
     "hints.czPhone":
       "For deliveries in the Czech Republic you must provide a <strong>Czech phone number.</strong>",
     "hints.useRealEmail":
       "Use an email you actually check. <strong>Important messages will go there.</strong>",
-    "hints.doc.nationalId": "Upload both front and back of your ID card.",
-    "hints.doc.euPassport": "Upload both front and back of your ID card.",
+    "hints.doc.nationalId":
+      "Upload both the front and back side of your ID card.",
+    "hints.doc.euPassport":
+      "Upload both the front and back side of your ID card.",
+
+    // ✅ Non-EU change: remove “upload ID card” mention
     "hints.doc.nonEu":
-      "*These files are required. ID card (front and back), Visa or residence permit, Study or work permit",
+      "*These files are required: visa OR residence permit OR work permit.",
+
     "hints.pinkstatement":
-      '<strong>POZOR</strong> - "růžové prohlášení o dani" (neboli Prohlášení poplatníka k dani z příjmů fyzických osob) můžete mít vyplněné a uplatněné pouze u jednoho zaměstnavatele. To znamená, že pokud máte více pracovních smluv, nebo kombinujete zaměstnání a brigády, můžete tento nárok využít jen u jedné firmy.',
-    "hints.doc.filesDriversLicense": "Upload your driver's license",
+      "<strong>WARNING</strong> - You can only have the “pink tax declaration” (Taxpayer’s Declaration for Personal Income Tax) applied with one employer. This means that if you have multiple employment contracts or combine jobs and part-time work, you can only claim this benefit with one company.",
+
+    // ✅ Driver’s license hint: remove duplication (front/back now in main green text)
+    "hints.doc.filesDriversLicense":
+      "Upload a clear photo or scan of your driver's license.",
 
     "ph.firstName": "Type your first name",
     "ph.lastName": "Type your last name",
@@ -232,16 +247,16 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "ph.passportOrId": "Enter ID number",
     "ph.permanentResidence":
       "e.g. 5 Avenue Anatole France, Champ de Mars, 75007 Paris, France",
-    "ph.placeOfBirth": "e.g. France",
-    "ph.permanentResidenceCountry": "Např. Česká republika",
-    "ph.permanentResidenceStreet": "Např. Václavské náměstí",
-    "ph.permanentResidenceStreetNumber": "Např. 123/45",
-    "ph.permanentResidenceCity": "Např. Praha",
-    "ph.documentNumber": "Např. M0032786",
+    "ph.placeOfBirth": "e.g. Paris, France",
+    "ph.permanentResidenceCountry": "e.g. Czech Republic",
+    "ph.permanentResidenceStreet": "e.g. Wenceslas Square",
+    "ph.permanentResidenceStreetNumber": "e.g. 123/45",
+    "ph.permanentResidenceCity": "e.g. Prague",
+    "ph.documentNumber": "e.g. M0032786",
 
     "errors.firstName": "Please enter your first name",
     "errors.lastName": "Please enter your last name",
-    "errors.phone": "Enter a Czech phone number in the format XXX XXX XXXX.",
+    "errors.phone": "Enter a Czech phone number in the format XXX XXX XXX.",
     "errors.email": "Please enter your email",
     "errors.passportOrId": "Please enter a valid ID number",
     "errors.nationalId": "Enter a valid national social security number.",
@@ -257,9 +272,10 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "errors.fox.lastName": "Please enter a valid last name",
     "errors.fox.email": "Email is invalid",
     "errors.fox.phone": "Phone is invalid",
-    "errors.fox.address": "Neplatné umístění",
+
+    "errors.fox.address": "Invalid location.",
     "errors.fox.city": "City does not match address.",
-    "errors.fox.street": "Street does not match address",
+    "errors.fox.street": "Street does not match address.",
     "errors.fox.zip": "ZIP does not match city.",
     "errors.fox.houseNumber": "House number does not match street.",
     "errors.fox.company":
@@ -292,9 +308,10 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "labels.passportExpiry": "Passport expiry date",
     "labels.placeOfBirth": "Place of birth",
     "labels.permanentResidence": "Permanent residence",
-    "labels.documentNumberEu": "Číslo občanského průkazu ",
+
+    "labels.documentNumberEu": "Identity card number",
     "labels.documentNumberNonEu":
-      "Číslo víza NEBO povolení k pobytu NEBO pracovní povolení  ",
+      "Visa OR residence permit OR work permit number",
 
     "answer.yes": "YES",
     "answer.no": "NO",
@@ -314,14 +331,13 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "options.gender.female": "Female",
     "options.gender.other": "Other",
 
-    "upload.button": "Upload File",
-    "upload.max": "Max file size 10MB.",
-    "upload.error.size": "Upload failed. Max size is 10 MB.",
+    "upload.button": "Upload file",
+    "upload.max": "Maximum file size is 10 MB.",
+    "upload.error.size": "Upload failed. Maximum file size is 10 MB.",
     "upload.error.type": "Upload failed. Invalid file type.",
-    "upload.error.generic":
-      "Upload failed. Something went wrong. Please retry.",
+    "upload.error.generic": "Upload failed. Please try again.",
 
-    "result.success": "Thanks. We’re on it.",
+    "result.success": "Thank you. We’re working on it.",
     "result.fail": "Oops! Something went wrong while submitting the form.",
     "result.loading.stage1": "Uploading your files...",
     "results.loading.stage2": "Verifying your information...",
@@ -332,7 +348,7 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "result.verifying.stage3": "Almost done...",
 
     "message.success":
-      "Form submitted successfully. You are being redirected ...",
+      "Form submitted successfully. You are being redirected...",
   },
 });
 
