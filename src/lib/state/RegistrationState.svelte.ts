@@ -12,20 +12,227 @@ import {
 import { validateStepAsync } from "../utils/validation";
 import { SubmissionStatus } from "../enums/form";
 import type { Company, FormStates, CustomErrors, Bucket } from "../types";
-import { PHASE1_ENDPOINT, PHASE2_ENDPOINT } from "../endpoints";
+import {
+  PHASE1_ENDPOINT,
+  PHASE2_ENDPOINT,
+  CLOUDINARY_UPLOAD_URL,
+  CLOUDINARY_UPLOAD_PRESET,
+} from "../endpoints";
 import { steps } from "../utils/stateMachine";
+
+const FALLBACK_HTTP_STATUSES = new Set([408, 413, 429, 500, 502, 503, 504]);
+
+function isNetworkishFetchError(err: any) {
+  const msg = String(err?.message ?? err ?? "").toLowerCase();
+  // Browsers vary, especially iOS/Safari
+  return (
+    msg.includes("failed to fetch") ||
+    msg.includes("networkerror") ||
+    msg.includes("load failed") ||
+    msg.includes("connection") ||
+    msg.includes("reset") ||
+    msg.includes("socket") ||
+    msg.includes("aborted") ||
+    msg.includes("abort") ||
+    msg.includes("timeout")
+  );
+}
+
+async function fetchWithTimeout(
+  url: string,
+  init: RequestInit,
+  timeoutMs: number,
+  timeoutMessage = "Request timed out"
+) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(timeoutMessage), timeoutMs);
+  try {
+    return await fetch(url, { ...init, signal: ctrl.signal });
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+// --- Helpers: Cloudinary upload (fallback path) ---
+
+type CloudinaryUploadFailure = {
+  file: File;
+  bucket: string; // e.g. "filesNationalId"
+  error: string;
+};
+
+type CloudinaryUploadResult = {
+  urls: string[];
+  failures: CloudinaryUploadFailure[];
+};
+
+async function uploadOneToCloudinary(
+  cloudinaryUrl: string,
+  preset: string,
+  file: File,
+  timeoutMs: number
+): Promise<string> {
+  const fd = new FormData();
+  fd.append("file", file, file.name);
+  fd.append("upload_preset", preset);
+
+  // If you use unsigned presets/folders, add them here:
+  // fd.append("upload_preset", "YOUR_PRESET");
+  // fd.append("folder", "registrations/phase2");
+
+  const res = await fetchWithTimeout(
+    cloudinaryUrl,
+    { method: "POST", body: fd },
+    timeoutMs,
+    `Cloudinary upload timed out after ${timeoutMs}ms`
+  );
+
+  const text = await res.text();
+
+  if (!res.ok) {
+    throw new Error(
+      `Cloudinary upload failed (${res.status}): ${text.slice(0, 300)}`
+    );
+  }
+
+  let data: any;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error(`Cloudinary returned non-JSON: ${text.slice(0, 300)}`);
+  }
+
+  const url = data?.secure_url || data?.url;
+  if (!url) {
+    throw new Error(
+      `Cloudinary response missing secure_url/url: ${text.slice(0, 300)}`
+    );
+  }
+
+  return String(url);
+}
+
+export async function uploadAllToCloudinary(
+  cloudinaryUrl: string,
+  preset: string,
+  filesWithBucket: { file: File; bucket: string }[],
+  perFileTimeoutMs = 60_000
+): Promise<CloudinaryUploadResult> {
+  if (!filesWithBucket.length) return { urls: [], failures: [] };
+
+  const settled = await Promise.allSettled(
+    filesWithBucket.map(({ file }) =>
+      uploadOneToCloudinary(cloudinaryUrl, preset, file, perFileTimeoutMs)
+    )
+  );
+
+  const urls: string[] = [];
+  const failures: CloudinaryUploadFailure[] = [];
+
+  settled.forEach((r, idx) => {
+    const meta = filesWithBucket[idx];
+    if (r.status === "fulfilled") {
+      urls.push(r.value);
+    } else {
+      failures.push({
+        file: meta.file,
+        bucket: meta.bucket,
+        error: String((r.reason as any)?.message ?? r.reason),
+      });
+    }
+  });
+
+  return { urls, failures };
+}
+
+// --- Helpers: FormData building ---
+
+function appendSnapshotFieldsToFormData(
+  fd: FormData,
+  snapshot: Record<string, any>
+) {
+  for (const [k, v] of Object.entries(snapshot)) {
+    // files are handled separately
+    if (
+      k === "filesNationalId" ||
+      k === "filesEuPassport" ||
+      k === "filesNonEu" ||
+      k === "filesDriversLicense"
+    )
+      continue;
+
+    if (v === undefined || v === null) continue;
+
+    if (
+      typeof v === "string" ||
+      typeof v === "number" ||
+      typeof v === "boolean"
+    ) {
+      fd.append(k, String(v));
+    } else {
+      fd.append(k, JSON.stringify(v));
+    }
+  }
+}
+
+function appendFilesToFormData(
+  fd: FormData,
+  snapshot: {
+    filesNationalId?: File[];
+    filesEuPassport?: File[];
+    filesNonEu?: File[];
+    filesDriversLicense?: File[];
+  }
+) {
+  snapshot.filesNationalId?.forEach((f) =>
+    fd.append("filesNationalId", f, f.name)
+  );
+  snapshot.filesEuPassport?.forEach((f) =>
+    fd.append("filesEuPassport", f, f.name)
+  );
+  snapshot.filesNonEu?.forEach((f) => fd.append("filesNonEu", f, f.name));
+  snapshot.filesDriversLicense?.forEach((f) =>
+    fd.append("filesDriversLicense", f, f.name)
+  );
+}
+
+function extractFilesWithBuckets(snapshot: {
+  filesNationalId?: File[];
+  filesEuPassport?: File[];
+  filesNonEu?: File[];
+  filesDriversLicense?: File[];
+}) {
+  const out: { file: File; bucket: string }[] = [];
+
+  snapshot.filesNationalId?.forEach((file) =>
+    out.push({ file, bucket: "filesNationalId" })
+  );
+  snapshot.filesEuPassport?.forEach((file) =>
+    out.push({ file, bucket: "filesEuPassport" })
+  );
+  snapshot.filesNonEu?.forEach((file) =>
+    out.push({ file, bucket: "filesNonEu" })
+  );
+  snapshot.filesDriversLicense?.forEach((file) =>
+    out.push({ file, bucket: "filesDriversLicense" })
+  );
+
+  return out;
+}
 
 export class RegistrationState {
   // State
   values = $state({
     firstName: "",
     lastName: "",
+    birthLastName: "",
     email: "",
     phone: "",
     companyId: "",
     companyName: "",
     nationalId: "",
     passportOrId: "",
+    communicationPassword: "",
     deliveryCompany: [] as string[],
     deliveryCompanyWolt: false,
     deliveryCompanyFoodora: false,
@@ -45,12 +252,15 @@ export class RegistrationState {
     transport: "",
     insurance: "",
     pinkStatement: undefined as boolean | undefined,
+    execution: undefined as boolean | undefined,
     gender: "",
     birthDate: "",
     documentExpiryDate: "",
     filesNationalId: [] as File[],
     filesEuPassport: [] as File[],
     filesNonEu: [] as File[],
+    filesEuResidence: [] as File[],
+    filesNonEuResidence: [] as File[],
     filesDriversLicense: [] as File[],
     utm_source: "",
     utm_campaign: "",
@@ -73,8 +283,13 @@ export class RegistrationState {
     permanentResidenceStreetNumber: "",
     permanentResidenceCity: "",
     courierId: "",
+    documentType: "",
     documentNumber: "",
     documentIssuingCountry: "",
+    residenceDocumentType: "",
+    residenceDocumentNumber: "",
+    residenceDocumentExpiryDate: "",
+    residenceDocumentIssuingCountry: "",
   });
 
   errors: CustomErrors = $state({});
@@ -108,7 +323,7 @@ export class RegistrationState {
   toNextStepIndex = $state(2);
 
   stepNavText = $derived(`${t("nav.next")} ${this.toNextStepIndex}/4`);
-  stepNavTextPaseTwo = $derived(`${t("nav.next")} ${this.toNextStepIndex}/2`);
+  stepNavTextPaseTwo = $derived(`${t("nav.next")} ${this.toNextStepIndex}/3`);
   askCountryAgain = $state(false);
 
   constructor() {
@@ -271,7 +486,14 @@ export class RegistrationState {
   // --- Validation & Navigation ---
 
   async validateCurrentStep(
-    stepId: "step1" | "step2" | "step3" | "step4" | "phase2"
+    stepId:
+      | "step1"
+      | "step2"
+      | "step3"
+      | "step4"
+      | "phase2Step1"
+      | "phase2Step2"
+      | "phase2Step3"
   ) {
     this.validating = true;
     const { ok, fieldErrors } = await validateStepAsync(
@@ -324,7 +546,10 @@ export class RegistrationState {
         ...steps.step4,
         ...steps.alwaysInclude,
       ];
-      const snapshot = this.mapStepsToSnapshot(this.values, fieldsForSnapshot);
+      const snapshot = this.mapStepsToSnapshot(
+        this.values,
+        fieldsForSnapshot as any
+      );
       const fd = new FormData();
       for (const [k, v] of Object.entries(snapshot)) {
         if (
@@ -352,6 +577,10 @@ export class RegistrationState {
         body: fd,
       });
 
+      if (!res.ok) {
+        throw new Error(`Submission failed with status: ${res.status}`);
+      }
+
       const text = await res.text();
       console.log("[formsubmission]", text);
       this.formState = "success";
@@ -364,6 +593,9 @@ export class RegistrationState {
       console.error(err);
       this.formState = "fail";
       this.submissionStatus = SubmissionStatus.REJECTED;
+
+      // Capture error
+      await this.captureError(err);
     } finally {
       this.disable = false;
       this.submitting = false;
@@ -378,72 +610,215 @@ export class RegistrationState {
     this.submitting = true;
     this.formState = "submitting";
 
-    // Placeholder endpoint
     const endpoint = PHASE2_ENDPOINT;
-    // artificial delay
-    // await sleep(3000);
+
+    // Tune these based on real-world behavior:
+    const MULTIPART_TIMEOUT_MS = 90_000; // longer to allow big uploads
+    const CLOUDINARY_PER_FILE_TIMEOUT_MS = 60_000;
+    const FALLBACK_SUBMIT_TIMEOUT_MS = 45_000;
+
     try {
-      const fieldsForSnapshot = [...steps.phase2, ...steps.alwaysInclude];
-      const snapshot = this.mapStepsToSnapshot(this.values, fieldsForSnapshot);
-      const fd = new FormData();
-      for (const [k, v] of Object.entries(snapshot)) {
-        if (
-          k === "filesNationalId" ||
-          k === "filesEuPassport" ||
-          k === "filesNonEu" ||
-          k === "filesDriversLicense"
-        )
-          continue;
-        if (v === undefined || v === null) continue;
-
-        if (
-          typeof v === "string" ||
-          typeof v === "number" ||
-          typeof v === "boolean"
-        ) {
-          fd.append(k, String(v));
-        } else {
-          // Nested objects (if any): send as JSON string
-          fd.append(k, JSON.stringify(v));
-        }
-      }
-      snapshot.filesNationalId?.forEach((f) =>
-        fd.append("filesNationalId", f, f.name)
-      );
-      snapshot.filesEuPassport?.forEach((f) =>
-        fd.append("filesEuPassport", f, f.name)
-      );
-      snapshot.filesNonEu?.forEach((f) => fd.append("filesNonEu", f, f.name));
-      snapshot.filesDriversLicense?.forEach((f) =>
-        fd.append("filesDriversLicense", f, f.name)
+      const fieldsForSnapshot = [
+        ...steps.phase2Step1,
+        ...steps.phase2Step2,
+        ...steps.phase2Step3,
+        ...steps.alwaysInclude,
+      ];
+      const snapshot: any = this.mapStepsToSnapshot(
+        this.values,
+        fieldsForSnapshot as any
       );
 
+      // Always ensure courierId present
       snapshot.courierId = this.values.courierId;
-      fd.append("courierId", this.values.courierId);
 
-      const res = await fetch(endpoint, {
-        method: "POST",
-        body: fd,
-      });
+      // ---------- Attempt 1: normal multipart submission ----------
+      const fdMultipart = new FormData();
+      appendSnapshotFieldsToFormData(fdMultipart, snapshot);
+      appendFilesToFormData(fdMultipart, snapshot);
+      fdMultipart.append("courierId", this.values.courierId);
 
-      const text = await res.text();
-      console.log("[formsubmission]", text);
+      let firstAttemptRes: Response | null = null;
+      let firstAttemptText = "";
+
+      try {
+        firstAttemptRes = await fetchWithTimeout(
+          endpoint,
+          { method: "POST", body: fdMultipart },
+          MULTIPART_TIMEOUT_MS,
+          `Phase2 multipart timed out after ${MULTIPART_TIMEOUT_MS}ms`
+        );
+
+        firstAttemptText = await firstAttemptRes.text();
+
+        if (!firstAttemptRes.ok) {
+          // Only fallback on "transport-ish / infra-ish" statuses.
+          // For 400/422 validation etc, don't hide the bug with fallback.
+          if (FALLBACK_HTTP_STATUSES.has(firstAttemptRes.status)) {
+            throw new Error(
+              `Multipart failed with status ${firstAttemptRes.status}`
+            );
+          }
+
+          throw new Error(
+            `Submission failed (${firstAttemptRes.status
+            }): ${firstAttemptText.slice(0, 300)}`
+          );
+        }
+
+        // ✅ success
+        console.log("[formsubmission]", firstAttemptText);
+        this.formState = "success";
+        this.submissionStatus = SubmissionStatus.APPROVED;
+        this.errors = {};
+        window.location.replace("/dekujeme");
+        return;
+      } catch (err: any) {
+        const shouldFallback =
+          isNetworkishFetchError(err) ||
+          (firstAttemptRes &&
+            FALLBACK_HTTP_STATUSES.has(firstAttemptRes.status));
+
+        if (!shouldFallback) throw err;
+
+        console.warn(
+          "[submitPhase2] Multipart failed; trying Cloudinary fallback.",
+          {
+            err: String(err?.message ?? err),
+            status: firstAttemptRes?.status,
+            responsePreview: firstAttemptText.slice(0, 300),
+          }
+        );
+      }
+
+      // ---------- Fallback: upload files to Cloudinary, then submit without files ----------
+      const filesWithBucket = extractFilesWithBuckets(snapshot);
+
+      const { urls, failures } = await uploadAllToCloudinary(
+        CLOUDINARY_UPLOAD_URL,
+        CLOUDINARY_UPLOAD_PRESET,
+        filesWithBucket,
+        CLOUDINARY_PER_FILE_TIMEOUT_MS
+      );
+
+      // Decision: if *all* uploads failed and we have files, stop (nothing useful to send).
+      if (filesWithBucket.length > 0 && urls.length === 0) {
+        throw new Error(
+          `Cloudinary fallback failed: no files uploaded. Example error: ${failures[0]?.error ?? "unknown"
+          }`
+        );
+      }
+
+      const fdFallback = new FormData();
+      appendSnapshotFieldsToFormData(fdFallback, snapshot);
+
+      // include courierId + urls
+      fdFallback.append("courierId", this.values.courierId);
+
+      // Store the urls as JSON (FormData can't send arrays reliably otherwise)
+      fdFallback.append("cloudinaryUrls", JSON.stringify(urls));
+
+      // Optional: send structured metadata so backend can map urls to buckets/names if you need it
+      if (filesWithBucket.length) {
+        fdFallback.append(
+          "cloudinaryFilesMeta",
+          JSON.stringify(
+            filesWithBucket.map(({ file, bucket }, idx) => ({
+              bucket,
+              name: file.name,
+              size: file.size,
+              type: file.type,
+              lastModified: file.lastModified,
+              // best-effort mapping: order aligned with successful urls, but not perfect if failures exist
+              // you can improve by uploading sequentially and capturing per-file url.
+              // For now, keep metadata for debugging.
+              index: idx,
+            }))
+          )
+        );
+      }
+
+      if (failures.length) {
+        fdFallback.append(
+          "cloudinaryUploadFailures",
+          JSON.stringify(
+            failures.map((f) => ({
+              bucket: f.bucket,
+              name: f.file.name,
+              size: f.file.size,
+              type: f.file.type,
+              lastModified: f.file.lastModified,
+              error: f.error,
+            }))
+          )
+        );
+      }
+
+      // Mark that we used fallback (handy in Make logs)
+      fdFallback.append("uploadMode", "cloudinary_fallback");
+
+      const fallbackRes = await fetchWithTimeout(
+        endpoint,
+        { method: "POST", body: fdFallback },
+        FALLBACK_SUBMIT_TIMEOUT_MS,
+        `Phase2 fallback submit timed out after ${FALLBACK_SUBMIT_TIMEOUT_MS}ms`
+      );
+
+      const fallbackText = await fallbackRes.text();
+
+      if (!fallbackRes.ok) {
+        throw new Error(
+          `Fallback submission failed (${fallbackRes.status
+          }): ${fallbackText.slice(0, 300)}`
+        );
+      }
+
+      console.log("[formsubmission fallback]", fallbackText);
       this.formState = "success";
       this.submissionStatus = SubmissionStatus.APPROVED;
-
       this.errors = {};
-      const welcome = "/dekujeme";
-      window.location.replace(welcome);
+      window.location.replace("/dekujeme");
     } catch (err) {
       console.error(err);
       this.formState = "fail";
       this.submissionStatus = SubmissionStatus.REJECTED;
+      await this.captureError(err);
     } finally {
       this.disable = false;
       this.submitting = false;
-
       this.trackCompletion(this.submissionStatus);
       this.trackCompletionWithoutAds(this.submissionStatus);
+    }
+  }
+
+  async captureError(error: any) {
+    try {
+      const userAgent =
+        navigator.userAgent.toLowerCase() ?? "Cannot detect browser";
+      const errorPayload = {
+        url: window.location.href,
+        response: {
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+          values: this.values,
+          browser: userAgent,
+        },
+        created_at: new Date().toISOString(),
+        session_id: this.values.sessionId,
+      };
+
+      await fetch(
+        "https://n8n-kn-digital-b6b8cc160b77.herokuapp.com/webhook/67c46be5-d570-47b3-8855-296d9edb7f03",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(errorPayload),
+        }
+      );
+    } catch (e) {
+      console.error("Failed to capture error", e);
     }
   }
 
@@ -452,19 +827,49 @@ export class RegistrationState {
   appendFiles(bucket: Bucket, files: FileList | File[]) {
     const fileList = Array.isArray(files) ? files : Array.from(files);
 
+    const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+    const validFiles: File[] = [];
+    let hasLargeFile = false;
+
+    fileList.forEach(f => {
+      if (f.size > MAX_FILE_SIZE) {
+        hasLargeFile = true;
+      } else {
+        validFiles.push(f);
+      }
+    });
+
+    const errorKey =
+      bucket === "nationalId"
+        ? "filesNationalId"
+        : bucket === "euPassport"
+          ? "filesEuPassport"
+          : bucket === "driversLicense"
+            ? "filesDriversLicense"
+            : "filesNonEu";
+
+    if (hasLargeFile) {
+      this.errors[errorKey] = [t("upload.error.size")];
+    } else {
+      // Clear error if it exists and we're adding valid files w/o issues
+      if (this.errors[errorKey]) {
+        delete this.errors[errorKey];
+      }
+    }
+
     const targetArray =
       bucket === "nationalId"
         ? this.values.filesNationalId
         : bucket === "euPassport"
-        ? this.values.filesEuPassport
-        : bucket === "driversLicense"
-        ? this.values.filesDriversLicense
-        : this.values.filesNonEu;
+          ? this.values.filesEuPassport
+          : bucket === "driversLicense"
+            ? this.values.filesDriversLicense
+            : this.values.filesNonEu;
 
     // Dedupe
     const current = targetArray;
     const byKey = new Map<string, File>();
-    [...current, ...fileList].forEach((f) => {
+    [...current, ...validFiles].forEach((f) => {
       byKey.set(`${f.name}|${f.size}|${f.lastModified}`, f);
     });
 
@@ -474,6 +879,10 @@ export class RegistrationState {
     else if (bucket === "euPassport") this.values.filesEuPassport = newFiles;
     else if (bucket === "driversLicense")
       this.values.filesDriversLicense = newFiles;
+    else if (bucket === "euResidence")
+      this.values.filesEuResidence = newFiles;
+    else if (bucket === "nonEuResidence")
+      this.values.filesNonEuResidence = newFiles;
     else this.values.filesNonEu = newFiles;
   }
 
@@ -482,10 +891,14 @@ export class RegistrationState {
       bucket === "nationalId"
         ? this.values.filesNationalId
         : bucket === "euPassport"
-        ? this.values.filesEuPassport
-        : bucket === "driversLicense"
-        ? this.values.filesDriversLicense
-        : this.values.filesNonEu;
+          ? this.values.filesEuPassport
+          : bucket === "driversLicense"
+            ? this.values.filesDriversLicense
+            : bucket === "euResidence"
+              ? this.values.filesEuResidence
+              : bucket === "nonEuResidence"
+                ? this.values.filesNonEuResidence
+                : this.values.filesNonEu;
 
     const newFiles = targetArray.filter((f) => f !== file);
 

@@ -126,7 +126,14 @@ const fxGroupValidators: FxGroupChecker[] = [addressGroupValidator];
 const everVisible = new Set<string>();
 const root = formSchema;
 export function getVisibleIds(
-  stepId: "step1" | "step2" | "step3" | "step4" | "phase2",
+  stepId:
+    | "step1"
+    | "step2"
+    | "step3"
+    | "step4"
+    | "phase2Step1"
+    | "phase2Step2"
+    | "phase2Step3",
   data: any
 ): string[] {
   return steps[stepId].filter((id) => {
@@ -165,7 +172,14 @@ const hasNoKeys = (o?: Record<string, unknown> | null) =>
  * Returns a merged FieldErrors map. `ok` is true only if the merged map is empty.
  */
 export async function validateStepAsync(
-  stepId: "step1" | "step2" | "step3" | "step4" | "phase2",
+  stepId:
+    | "step1"
+    | "step2"
+    | "step3"
+    | "step4"
+    | "phase2Step1"
+    | "phase2Step2"
+    | "phase2Step3",
   data: any,
   includeFoxentry: boolean
 ) {

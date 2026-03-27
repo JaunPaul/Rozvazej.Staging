@@ -17,4 +17,10 @@ export type Company =
   | "";
 export type FormStates = "submitting" | "success" | "fail" | "neutral";
 
-export type Bucket = "nationalId" | "euPassport" | "nonEu" | "driversLicense";
+export type Bucket =
+  | "nationalId"
+  | "euPassport"
+  | "nonEu"
+  | "driversLicense"
+  | "euResidence"
+  | "nonEuResidence";
