@@ -164,4 +164,42 @@
         </div>
         <Errors errors={registrationState.errors} path="pinkStatement" />
     </div>
+    <div class="input-wrap">
+        <label class="field-label" for="executionYes"
+            >{t("labels.execution")}</label
+        >
+        <div class="input-group-wrap">
+            <label
+                class="registrationtype w-radio"
+                class:is-checked={registrationState.values.execution ===
+                    true}
+            >
+                <input
+                    id="executionYes"
+                    type="radio"
+                    name="execution"
+                    bind:group={registrationState.values.execution}
+                    value={true}
+                    style="opacity:0;position:absolute"
+                />
+                <span class="w-form-label">{t("answer.yes")}</span>
+            </label>
+            <label
+                class="registrationtype w-radio"
+                class:is-checked={registrationState.values.execution ===
+                    false}
+            >
+                <input
+                    id="executionNo"
+                    type="radio"
+                    name="execution"
+                    bind:group={registrationState.values.execution}
+                    value={false}
+                    style="opacity:0;position:absolute"
+                />
+                <span class="w-form-label">{t("answer.no")}</span>
+            </label>
+        </div>
+        <Errors errors={registrationState.errors} path="execution" />
+    </div>
 </div>

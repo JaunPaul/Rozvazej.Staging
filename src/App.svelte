@@ -7,8 +7,17 @@
   import { SubmissionStatus } from "./lib/enums/form";
   import { onMount } from "svelte";
   import { verifyUser } from "./lib/utils/helpers";
+  import CloudinaryDebug from "./lib/components/CloudinaryDebug.svelte";
 
   const registrationState = new RegistrationState();
+
+  let isDebugCloudinary = false;
+
+  // Check URL params for debug=cloudinary
+  if (typeof window !== "undefined") {
+    const params = new URLSearchParams(window.location.search);
+    isDebugCloudinary = params.get("debug") === "cloudinary";
+  }
 
   onMount(async () => {
     if (registrationState.currentPhase === 2) {
@@ -30,7 +39,26 @@
   });
 </script>
 
-{#if registrationState.submitting}
+{#if isDebugCloudinary}
+  <CloudinaryDebug />
+{:else if registrationState.formState === "success"}
+  <div class="message-container">
+    <div class="text-16px">
+      {#if registrationState.submissionStatus === SubmissionStatus.APPROVED}
+        {t("messages.success")}
+      {:else}
+        {t("messages.rejected")}
+      {/if}
+    </div>
+  </div>
+{:else if registrationState.formState === "fail"}
+  <div class="w-form-fail" style="display: block;">
+    <div>{t("messages.error")}</div>
+    {#if registrationState.errors?.error && typeof registrationState.errors.error === "object" && "message" in registrationState.errors.error}
+      <div>{(registrationState.errors.error as any).message}</div>
+    {/if}
+  </div>
+{:else if registrationState.submitting}
   <Loader />
 {:else if registrationState.currentPhase === 2 && !registrationState.verified && registrationState.verificationStatus === "pending"}
   <Loader
@@ -70,27 +98,6 @@
       {:else}
         <Phase2 {registrationState} />
       {/if}
-    {/if}
-  </div>
-{/if}
-
-{#if registrationState.formState === "success"}
-  <div class="message-container">
-    <div class="text-16px">
-      {#if registrationState.submissionStatus === SubmissionStatus.APPROVED}
-        {t("messages.success")}
-      {:else}
-        {t("messages.rejected")}
-      {/if}
-    </div>
-  </div>
-{/if}
-
-{#if registrationState.formState === "fail"}
-  <div class="w-form-fail" style="display: block;">
-    <div>{t("messages.error")}</div>
-    {#if registrationState.errors?.error && typeof registrationState.errors.error === "object" && "message" in registrationState.errors.error}
-      <div>{(registrationState.errors.error as any).message}</div>
     {/if}
   </div>
 {/if}

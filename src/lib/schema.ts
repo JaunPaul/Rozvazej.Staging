@@ -74,6 +74,7 @@ export const formSchema = z.object({
     .string({ error: t("errors.firstName") })
     .min(1, { error: t("errors.firstName") }),
   lastName: z.string().min(1, { error: t("errors.lastName") }),
+  birthLastName: z.string().optional(),
   phone: z.string().min(1, { error: t("errors.phone") }),
   email: z.email({ error: t("errors.email") }),
   applyAsCompany: z.boolean({ error: t("errors.applyAsCompany") }),
@@ -81,12 +82,16 @@ export const formSchema = z.object({
   // step2
   companyId: z.string().min(1, { error: t("errors.companyId") }),
   country: z.string().min(1, { error: t("errors.country") }),
-  nationalId: z
+  /* nationalId: z
     .string()
     .trim()
     .refine(isValidCzechBirthNumber, { message: t("errors.nationalId") })
-    .transform((s) => normalizeCzechBirthNumber(s)!),
-  passportOrId: z.string().min(1, { error: t("errors.passportOrId") }),
+    .transform((s) => normalizeCzechBirthNumber(s)!), */
+  // passportOrId: z.string().min(1, { error: t("errors.passportOrId") }),
+  communicationPassword: z
+    .string()
+    .min(1, { error: t("errors.communicationPassword") })
+    .regex(/^[a-zA-Z0-9]+$/, { message: t("errors.communicationPasswordSpecialChars") }),
   street: z.string().min(1, { error: t("errors.street") }),
   houseNumber: z.string().min(1, { error: t("errors.houseNumber") }),
   city: z.string().min(1, { error: t("errors.city") }),
@@ -101,6 +106,8 @@ export const formSchema = z.object({
   filesNationalId: fileArray(2),
   filesEuPassport: fileArray(2),
   filesNonEu: fileArray(2),
+  filesEuResidence: fileArray(1),
+  filesNonEuResidence: fileArray(1),
   filesDriversLicense: fileArray(1),
 
   // step3
@@ -138,9 +145,15 @@ export const formSchema = z.object({
   permanentResidenceCountry: z.string().min(1, { error: t("errors.country") }),
   placeOfBirth: z.string().min(1, { error: t("errors.placeOfBirth") }),
   insurance: z.string().min(1, { error: t("errors.insurance") }),
-  pinkStatement: z.coerce.boolean({ error: t("errors.pinkStatement") }),
+  pinkStatement: z.boolean({ error: t("errors.pinkStatement") }),
+  execution: z.boolean({ error: t("errors.execution") }),
   documentNumber: z.string().min(1, { error: t("errors.documentNumber") }),
+  documentType: z.string().min(1, { error: t("errors.documentType") }),
   documentIssuingCountry: z.string().min(1, { error: t("errors.country") }),
+  residenceDocumentType: z.string().min(1, { error: t("errors.residenceDocumentType") }),
+  residenceDocumentNumber: z.string().min(1, { error: t("errors.documentNumber") }),
+  residenceDocumentExpiryDate: z.string().min(1, { error: t("errors.documentExpiryDate") }),
+  residenceDocumentIssuingCountry: z.string().min(1, { error: t("errors.country") }),
 });
 
 export const verifyResponseSchema = z.object({

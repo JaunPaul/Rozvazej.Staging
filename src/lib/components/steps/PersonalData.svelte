@@ -40,6 +40,26 @@
 
   <div class="input-group-wrap">
     <div class="input-wrap">
+      <label for="birthLastName" class="field-label"
+        >{t("labels.birthLastName")}</label
+      >
+      <input
+        class="input-2 w-input"
+        type="text"
+        id="birthLastName"
+        name="birthLastName"
+        placeholder={t("ph.birthLastName")}
+        bind:value={registrationState.values.birthLastName}
+      />
+      <div class="text-explain">
+        {@html t("hints.birthLastName")}
+      </div>
+      <Errors errors={registrationState.errors} path="birthLastName" />
+    </div>
+  </div>
+
+  <div class="input-group-wrap">
+    <div class="input-wrap">
       <label for="phone" class="field-label">{t("labels.phone")}</label>
       <input
         class="input-2 w-input"
