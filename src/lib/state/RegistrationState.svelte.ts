@@ -157,7 +157,9 @@ function appendSnapshotFieldsToFormData(
       k === "filesNationalId" ||
       k === "filesEuPassport" ||
       k === "filesNonEu" ||
-      k === "filesDriversLicense"
+      k === "filesDriversLicense" ||
+      k === "filesEuResidence" ||
+      k === "filesNonEuResidence"
     )
       continue;
 
@@ -182,17 +184,28 @@ function appendFilesToFormData(
     filesEuPassport?: File[];
     filesNonEu?: File[];
     filesDriversLicense?: File[];
+    filesEuResidence?: File[];
+    filesNonEuResidence?: File[];
   }
 ) {
+  // Prefix file names with bucket identifier for n8n binary mapping
   snapshot.filesNationalId?.forEach((f) =>
-    fd.append("filesNationalId", f, f.name)
+    fd.append("filesNationalId", f, `filesNationalId__${f.name}`)
   );
   snapshot.filesEuPassport?.forEach((f) =>
-    fd.append("filesEuPassport", f, f.name)
+    fd.append("filesEuPassport", f, `filesEuPassport__${f.name}`)
   );
-  snapshot.filesNonEu?.forEach((f) => fd.append("filesNonEu", f, f.name));
+  snapshot.filesNonEu?.forEach((f) =>
+    fd.append("filesNonEu", f, `filesNonEu__${f.name}`)
+  );
   snapshot.filesDriversLicense?.forEach((f) =>
-    fd.append("filesDriversLicense", f, f.name)
+    fd.append("filesDriversLicense", f, `filesDriversLicense__${f.name}`)
+  );
+  snapshot.filesEuResidence?.forEach((f) =>
+    fd.append("filesEuResidence", f, `filesEuResidence__${f.name}`)
+  );
+  snapshot.filesNonEuResidence?.forEach((f) =>
+    fd.append("filesNonEuResidence", f, `filesNonEuResidence__${f.name}`)
   );
 }
 
@@ -201,6 +214,8 @@ function extractFilesWithBuckets(snapshot: {
   filesEuPassport?: File[];
   filesNonEu?: File[];
   filesDriversLicense?: File[];
+  filesEuResidence?: File[];
+  filesNonEuResidence?: File[];
 }) {
   const out: { file: File; bucket: string }[] = [];
 
@@ -215,6 +230,12 @@ function extractFilesWithBuckets(snapshot: {
   );
   snapshot.filesDriversLicense?.forEach((file) =>
     out.push({ file, bucket: "filesDriversLicense" })
+  );
+  snapshot.filesEuResidence?.forEach((file) =>
+    out.push({ file, bucket: "filesEuResidence" })
+  );
+  snapshot.filesNonEuResidence?.forEach((file) =>
+    out.push({ file, bucket: "filesNonEuResidence" })
   );
 
   return out;
@@ -403,6 +424,8 @@ export class RegistrationState {
         this.values.filesEuPassport = [];
         this.values.filesNonEu = [];
         this.values.filesDriversLicense = [];
+        this.values.filesEuResidence = [];
+        this.values.filesNonEuResidence = [];
       } catch (e) {
         console.error("Failed to parse saved form data", e);
       }
@@ -417,6 +440,8 @@ export class RegistrationState {
         filesEuPassport,
         filesNonEu,
         filesDriversLicense,
+        filesEuResidence,
+        filesNonEuResidence,
         ...rest
       } = this.values;
       sessionStorage.setItem("multi-form-session", JSON.stringify(rest));

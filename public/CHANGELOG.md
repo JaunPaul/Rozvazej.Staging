@@ -14,7 +14,6 @@
         - občanský průkaz
         - pas
     - **Non-EU Countries (excluding CZ)**:
-        - Přechodný pobyt
         - Trvalý pobyt
         - Krátkodobé vízum
         - Dlouhodobé vízum
