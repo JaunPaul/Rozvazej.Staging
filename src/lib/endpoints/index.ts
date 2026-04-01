@@ -8,8 +8,10 @@ export const __PHASE1_ENDPOINT =
   "https://hook.eu1.make.com/nw3j7e6aki3oxj7f8ai831epwoyglogn";
 export const __PHASE2_ENDPOINT =
   "https://hook.eu1.make.com/yixxpesdj9yc1hwb8rg3aspew3gsa726";
-export const VERIFY_ENDPOINT =
+export const old_VERIFY_ENDPOINT =
   "https://hook.eu1.make.com/l2h1aqrtf5t32bqyaw8x71m1u95rd3ah";
+export const VERIFY_ENDPOINT =
+  "https://ondrejsteiger.app.n8n.cloud/webhook-test/3a5d2832-2f8f-4479-ab05-ac38ec102a10";
 
 export const _PHASE1_ENDPOINT =
   "https://hook.eu1.make.com/vxt1uhk61i3ypdckwtoxp5fnql5hsg17";
