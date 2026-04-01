@@ -7,7 +7,23 @@
 - **Communication Password Field**: Added `communicationPassword` field to Phase 1, Step 3 (Citizenship) for users to create their own password without special characters.
 - **Execution Field**: Added an `execution` boolean field to Phase 1, Step 4 (Payment Details).
 - **Identity Document Fields**: Added `documentType` and `documentExpiryDate` fields for EU and Non-EU identity documents in Phase 2.
-- **Residence Document Options**: Expanded `residenceDocumentType` dropdown with short-term, long-term, study, permanent, and temporary protection options.
+- **Residence Document Options**: Expanded `residenceDocumentType` dropdown with country-specific options:
+    - **EU Countries (excluding CZ)**:
+        - Přechodný pobyt
+        - Trvalý pobyt
+        - občanský průkaz
+        - pas
+    - **Non-EU Countries (excluding CZ)**:
+        - Přechodný pobyt
+        - Trvalý pobyt
+        - Krátkodobé vízum
+        - Dlouhodobé vízum
+        - Studium
+        - Dočasná ochrana
+        - Mezinárodní ochrana
+        - Dlouhodobý pobyt (kód 95)
+        - Dlouhodobý pobyt (kód 99)
+        - Dlouhodobý pobyt (kód 670)
 - **Residence File Uploads**: Added dedicated `EuResidenceFileUpload` and `NonEuResidenceFileUpload` components to handle document uploads based on the user's citizenship.
 
 ### Changed

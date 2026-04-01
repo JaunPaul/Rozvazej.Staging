@@ -2,6 +2,8 @@ export const PHASE1_ENDPOINT =
   "https://ondrejsteiger.app.n8n.cloud/webhook-test/4401edbf-60a7-4cc4-a4a6-c481af143785";
 export const PHASE2_ENDPOINT =
   "https://ondrejsteiger.app.n8n.cloud/webhook-test/5a4c47f2-de30-493e-9c61-a7b86d7171df";
+export const test_PHASE2_ENDPOINT =
+  "https://n8n-kn-digital-b6b8cc160b77.herokuapp.com/webhook/228335d5-a0c1-45a1-a144-72146a50dc76";
 export const __PHASE1_ENDPOINT =
   "https://hook.eu1.make.com/nw3j7e6aki3oxj7f8ai831epwoyglogn";
 export const __PHASE2_ENDPOINT =

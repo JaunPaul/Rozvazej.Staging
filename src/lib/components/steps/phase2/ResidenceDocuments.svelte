@@ -168,15 +168,33 @@
             <option value="Dlouhodobý pobyt (kód 670)"
               >{t("options.residenceDocumentType.code670")}</option
             >
-          </select>
-          <Errors
-            errors={registrationState.errors}
-            path="residenceDocumentType"
-          />
-        </div>
-      </div>
-      {@render documentFields(t("labels.documentNumberNonEu"))}
-      <NonEuResidenceFileUpload {registrationState}></NonEuResidenceFileUpload>
+           </select>
+           <Errors
+             errors={registrationState.errors}
+             path="residenceDocumentType"
+           />
+         </div>
+       </div>
+       {#if registrationState.values.residenceDocumentType === "Krátkodobé vízum" || registrationState.values.residenceDocumentType === "Dlouhodobé vízum"}
+         <div class="input-group-wrap">
+           <div class="input-wrap">
+             <label for="visaCode" class="field-label"
+               >{t("labels.visaCode")}</label
+             >
+             <input
+               class="input-2 w-input"
+               type="text"
+               id="visaCode"
+               name="visaCode"
+               placeholder={t("ph.visaCode")}
+               bind:value={registrationState.values.visaCode}
+             />
+             <Errors errors={registrationState.errors} path="visaCode" />
+           </div>
+         </div>
+       {/if}
+       {@render documentFields(t("labels.documentNumberNonEu"))}
+       <NonEuResidenceFileUpload {registrationState}></NonEuResidenceFileUpload>
     {/if}
   {/if}
 </div>

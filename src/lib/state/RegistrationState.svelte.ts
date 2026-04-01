@@ -286,10 +286,11 @@ export class RegistrationState {
     documentType: "",
     documentNumber: "",
     documentIssuingCountry: "",
-    residenceDocumentType: "",
-    residenceDocumentNumber: "",
-    residenceDocumentExpiryDate: "",
-    residenceDocumentIssuingCountry: "",
+   residenceDocumentType: "",
+   residenceDocumentNumber: "",
+   residenceDocumentExpiryDate: "",
+   residenceDocumentIssuingCountry: "",
+   visaCode: "",
   });
 
   errors: CustomErrors = $state({});
@@ -632,11 +633,10 @@ export class RegistrationState {
       // Always ensure courierId present
       snapshot.courierId = this.values.courierId;
 
-      // ---------- Attempt 1: normal multipart submission ----------
-      const fdMultipart = new FormData();
-      appendSnapshotFieldsToFormData(fdMultipart, snapshot);
-      appendFilesToFormData(fdMultipart, snapshot);
-      fdMultipart.append("courierId", this.values.courierId);
+       // ---------- Attempt 1: normal multipart submission ----------
+       const fdMultipart = new FormData();
+       appendSnapshotFieldsToFormData(fdMultipart, snapshot);
+       appendFilesToFormData(fdMultipart, snapshot);
 
       let firstAttemptRes: Response | null = null;
       let firstAttemptText = "";
@@ -709,14 +709,11 @@ export class RegistrationState {
         );
       }
 
-      const fdFallback = new FormData();
-      appendSnapshotFieldsToFormData(fdFallback, snapshot);
+       const fdFallback = new FormData();
+       appendSnapshotFieldsToFormData(fdFallback, snapshot);
 
-      // include courierId + urls
-      fdFallback.append("courierId", this.values.courierId);
-
-      // Store the urls as JSON (FormData can't send arrays reliably otherwise)
-      fdFallback.append("cloudinaryUrls", JSON.stringify(urls));
+       // Store the urls as JSON (FormData can't send arrays reliably otherwise)
+       fdFallback.append("cloudinaryUrls", JSON.stringify(urls));
 
       // Optional: send structured metadata so backend can map urls to buckets/names if you need it
       if (filesWithBucket.length) {
