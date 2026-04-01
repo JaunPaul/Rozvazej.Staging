@@ -65,7 +65,6 @@
   </div>
 
   {#if registrationState.values.country === "CZ"}
-    <!--
     <div class="input-wrap">
       <label for="nationalId" class="field-label"
         >{t("labels.nationalId")}</label
@@ -80,7 +79,6 @@
       />
       <Errors errors={registrationState.errors} path="nationalId" />
     </div>
-    -->
   {/if}
 
   {#if registrationState.values.country}

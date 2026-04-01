@@ -15,8 +15,10 @@ function isValidCzechBirthNumber(raw: string): boolean {
   //  +50 → female (all years)
   //  +20 → extension since 2004 (both genders)
   //  +70 → 50+20 for females since 2004
-  if (mm > 70) mm -= 70; // female + extension
-  else if (mm > 50) mm -= 50; // female
+  if (mm > 70)
+    mm -= 70; // female + extension
+  else if (mm > 50)
+    mm -= 50; // female
   else if (mm > 20) mm -= 20; // extension
 
   if (mm < 1 || mm > 12) return false;
@@ -82,16 +84,18 @@ export const formSchema = z.object({
   // step2
   companyId: z.string().min(1, { error: t("errors.companyId") }),
   country: z.string().min(1, { error: t("errors.country") }),
-  /* nationalId: z
+  nationalId: z
     .string()
     .trim()
     .refine(isValidCzechBirthNumber, { message: t("errors.nationalId") })
-    .transform((s) => normalizeCzechBirthNumber(s)!), */
+    .transform((s) => normalizeCzechBirthNumber(s)!),
   // passportOrId: z.string().min(1, { error: t("errors.passportOrId") }),
   communicationPassword: z
     .string()
     .min(1, { error: t("errors.communicationPassword") })
-    .regex(/^[a-zA-Z0-9]+$/, { message: t("errors.communicationPasswordSpecialChars") }),
+    .regex(/^[a-zA-Z0-9]+$/, {
+      message: t("errors.communicationPasswordSpecialChars"),
+    }),
   street: z.string().min(1, { error: t("errors.street") }),
   houseNumber: z.string().min(1, { error: t("errors.houseNumber") }),
   city: z.string().min(1, { error: t("errors.city") }),
@@ -126,13 +130,13 @@ export const formSchema = z.object({
         const cutoff = new Date(
           today.getFullYear() - 15,
           today.getMonth(),
-          today.getDate()
+          today.getDate(),
         );
         return date <= cutoff;
       },
       {
         message: t("errors.birthDateTooYoung"),
-      }
+      },
     ),
   documentExpiryDate: z
     .string()
@@ -150,10 +154,19 @@ export const formSchema = z.object({
   documentNumber: z.string().min(1, { error: t("errors.documentNumber") }),
   documentType: z.string().min(1, { error: t("errors.documentType") }),
   documentIssuingCountry: z.string().min(1, { error: t("errors.country") }),
-  residenceDocumentType: z.string().min(1, { error: t("errors.residenceDocumentType") }),
-  residenceDocumentNumber: z.string().min(1, { error: t("errors.documentNumber") }),
-  residenceDocumentExpiryDate: z.string().min(1, { error: t("errors.documentExpiryDate") }),
-  residenceDocumentIssuingCountry: z.string().min(1, { error: t("errors.country") }),
+  residenceDocumentType: z
+    .string()
+    .min(1, { error: t("errors.residenceDocumentType") }),
+  residenceDocumentNumber: z
+    .string()
+    .min(1, { error: t("errors.documentNumber") }),
+  residenceDocumentExpiryDate: z
+    .string()
+    .min(1, { error: t("errors.documentExpiryDate") }),
+  residenceDocumentIssuingCountry: z
+    .string()
+    .min(1, { error: t("errors.country") }),
+  visaCode: z.string().min(1, { error: t("errors.visaCode") }),
 });
 
 export const verifyResponseSchema = z.object({

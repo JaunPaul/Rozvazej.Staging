@@ -185,6 +185,9 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "options.residenceDocumentType.code95": "Dlouhodobý pobyt (kód 95)",
     "options.residenceDocumentType.code99": "Dlouhodobý pobyt (kód 99)",
     "options.residenceDocumentType.code670": "Dlouhodobý pobyt (kód 670)",
+    "labels.visaCode": "Kód víza",
+    "ph.visaCode": "Např. ABC123",
+    "errors.visaCode": "Zadejte prosím kód víza",
 
     "upload.button": "Nahrát soubor",
     "upload.max": "Maximální velikost souboru 2 MB.",
@@ -399,6 +402,9 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "options.residenceDocumentType.code95": "Long-term Residence (code 95)",
     "options.residenceDocumentType.code99": "Long-term Residence (code 99)",
     "options.residenceDocumentType.code670": "Long-term Residence (code 670)",
+    "labels.visaCode": "Visa Code",
+    "ph.visaCode": "e.g. ABC123",
+    "errors.visaCode": "Please enter your visa code",
 
     "upload.button": "Upload file",
     "upload.max": "Maximum file size is 2 MB.",
