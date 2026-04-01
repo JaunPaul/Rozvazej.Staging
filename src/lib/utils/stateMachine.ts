@@ -39,7 +39,6 @@ export const steps: Record<
     "documentExpiryDate",
     "documentType",
     "documentNumber",
-    "nationalId",
     "documentIssuingCountry",
     "filesNationalId",
     "filesEuPassport",
