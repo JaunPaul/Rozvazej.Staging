@@ -119,7 +119,7 @@
           />
         </div>
       </div>
-      {@render documentFields(t("labels.documentNumberEu"))}
+      {@render documentFields(t("labels.residenceDocumentNumberEu"))}
       <EuResidenceFileUpload {registrationState}></EuResidenceFileUpload>
     {/if}
 
@@ -190,7 +190,7 @@
           </div>
         </div>
       {/if}
-      {@render documentFields(t("labels.documentNumberNonEu"))}
+      {@render documentFields(t("labels.residenceDocumentNumberNonEu"))}
       <NonEuResidenceFileUpload {registrationState}></NonEuResidenceFileUpload>
     {/if}
   {/if}
