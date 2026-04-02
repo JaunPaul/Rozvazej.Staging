@@ -38,15 +38,18 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "labels.bank.number": "Číslo bankovního účtu",
     "labels.bank.code": "Kód banky",
     "labels.doc.nationalId": `Nahrajte ID/ jiný platný doklad. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
-    "labels.doc.euPassport": `Nahrajte svůj občanský průkaz. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
+    "labels.doc.euPassport": `Nahrajte svůj občanský průkaz nebo cestovní pas.`,
     "labels.doc.euResidence": `Nahrajte svůj doklad o pobytu. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
-    "labels.doc.nonEu": `Nahrajte následující platné dokumenty. <br /><span class="bold-green">1. Vízum NEBO povolení k pobytu NEBO pracovní povolení</span>`,
+    "labels.doc.nonEu": `Nahrajte svůj cestovní pas. <br /><span class="bold-green">1. Vízum NEBO povolení k pobytu NEBO pracovní povolení</span>`,
     "labels.doc.nonEuResidence": `Nahrajte svůj doklad o pobytu. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
     "labels.doc.driversLicense": `Nahrajte platný řidičský průkaz. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
     "labels.deliveryCompany":
       "Neomezujte se - u nás můžete jezdit pro všechny tři služby najednou: Bolt, Wolt i Foodora. Více platforem = více objednávek = vyšší výdělky. Stačí si zvolit, kde chcete začít!",
-    "labels.documentNumberEu": "Číslo občanského průkazu ",
+    "labels.documentNumberEu": "Číslo občanského průkazu nebo cestovního pasu",
     "labels.documentNumberNonEu":
+      "Číslo víza NEBO povolení k pobytu NEBO pracovní povolení  ",
+    "labels.residenceDocumentNumberEu": "Číslo pobytového dokladu",
+    "labels.residenceDocumentNumberNonEu":
       "Číslo víza NEBO povolení k pobytu NEBO pracovní povolení  ",
     "labels.documentType": "Typ dokladu",
     "labels.documentIssuingCountry": "Země vydání dokladu",
@@ -61,14 +64,11 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "hints.doc.nationalId":
       "Nahrajte přední i zadní stranu svého občanského průkazu.",
     "hints.doc.euPassport":
-      "Nahrajte přední i zadní stranu svého občanského průkazu.",
-    "hints.doc.euResidence":
-      "Nahrajte přední i zadní stranu svého dokladu.",
+      "Nahrajte přední i zadní stranu občanského průkazu nebo cestovního pasu.",
+    "hints.doc.euResidence": "Nahrajte přední i zadní stranu svého dokladu.",
     "hints.communicationPassword": "Vytvořte si heslo bez speciálních znaků",
-    "hints.doc.nonEu":
-      "*Tyto dokumenty jsou vyžadovány: vízum NEBO povolení k pobytu NEBO studijní/pracovní povolení.",
-    "hints.doc.nonEuResidence":
-      "Nahrajte přední i zadní stranu svého dokladu.",
+    "hints.doc.nonEu": "*Nahrajte přední i zadní stranu cestovního pasu.",
+    "hints.doc.nonEuResidence": "Nahrajte přední i zadní stranu svého dokladu.",
     "hints.pinkstatement":
       'Pokud zvolíte ANO, uplatníme u Vás slevu na dani a budete dostávat více peněz.<br><br> <strong>POZOR</strong> - "růžové prohlášení o dani" (neboli Prohlášení poplatníka k dani z příjmů fyzických osob) můžete mít vyplněné a uplatněné pouze u jednoho zaměstnavatele. To znamená, že pokud máte více pracovních smluv, nebo kombinujete zaměstnání a brigády, můžete tento nárok využít jen u jedné firmy.',
     "hints.doc.filesDriversLicense":
@@ -101,7 +101,8 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "errors.nationalId": "Zadejte platné rodné číslo.",
     "errors.passportOrId": "Zadejte prosím platné číslo průkazu totožnosti",
     "errors.communicationPassword": "Zadejte heslo pro komunikaci",
-    "errors.communicationPasswordSpecialChars": "Heslo nesmí obsahovat speciální znaky",
+    "errors.communicationPasswordSpecialChars":
+      "Heslo nesmí obsahovat speciální znaky",
     "errors.street": "Zadejte prosím název ulice",
     "errors.houseNumber": "Zadejte prosím číslo popisné",
     "errors.city": "Zadejte prosím město či obec",
@@ -270,7 +271,8 @@ const dict = $state<Record<Locale, Record<string, string>>>({
       "Upload both the front and back side of your ID card.",
     "hints.doc.euResidence":
       "Upload both the front and back side of your document.",
-    "hints.communicationPassword": "Create a password without special characters",
+    "hints.communicationPassword":
+      "Create a password without special characters",
 
     // ✅ Non-EU change: remove “upload ID card” mention
     "hints.doc.nonEu":
@@ -311,7 +313,8 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "errors.email": "Please enter your email",
     "errors.passportOrId": "Please enter a valid ID number",
     "errors.communicationPassword": "Enter a communication password",
-    "errors.communicationPasswordSpecialChars": "Password cannot contain special characters",
+    "errors.communicationPasswordSpecialChars":
+      "Password cannot contain special characters",
     "errors.nationalId": "Enter a valid national social security number.",
     "errors.street": "Please enter the street name",
     "errors.houseNumber": "Please enter the house number",
@@ -381,7 +384,8 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "select.placeholder.gender": "Select gender",
     "select.placeholder.bank": "Select a bank",
     "select.placeholder.documentType": "Select document type",
-    "select.placeholder.residenceDocumentType": "Select residence document type",
+    "select.placeholder.residenceDocumentType":
+      "Select residence document type",
 
     "options.transport.car": "Car",
     "options.transport.bike": "Bicycle",
