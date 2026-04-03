@@ -40,7 +40,7 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "labels.doc.nationalId": `Nahrajte ID/ jiný platný doklad. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
     "labels.doc.euPassport": `Nahrajte svůj občanský průkaz nebo cestovní pas.`,
     "labels.doc.euResidence": `Nahrajte svůj doklad o pobytu. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
-    "labels.doc.nonEu": `Nahrajte svůj cestovní pas. <br /><span class="bold-green">1. Vízum NEBO povolení k pobytu NEBO pracovní povolení</span>`,
+    "labels.doc.nonEu": `Nahrajte svůj cestovní pas.`,
     "labels.doc.nonEuResidence": `Nahrajte svůj doklad o pobytu. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
     "labels.doc.driversLicense": `Nahrajte platný řidičský průkaz. <br /><span class="bold-green">1. PŘEDNÍ STRANA</span><br /><span class="bold-green">2. ZADNÍ STRANA</span>`,
     "labels.deliveryCompany":
@@ -49,8 +49,7 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "labels.documentNumberNonEu":
       "Číslo víza NEBO povolení k pobytu NEBO pracovní povolení  ",
     "labels.residenceDocumentNumberEu": "Číslo pobytového dokladu",
-    "labels.residenceDocumentNumberNonEu":
-      "Číslo víza NEBO povolení k pobytu NEBO pracovní povolení  ",
+    "labels.residenceDocumentNumberNonEu": "Číslo pobytového dokladu",
     "labels.documentType": "Typ dokladu",
     "labels.documentIssuingCountry": "Země vydání dokladu",
     "labels.residenceDocumentType": "Typ dokladu o pobytu",
@@ -187,7 +186,7 @@ const dict = $state<Record<Locale, Record<string, string>>>({
     "options.residenceDocumentType.code99": "Dlouhodobý pobyt (kód 99)",
     "options.residenceDocumentType.code670": "Dlouhodobý pobyt (kód 670)",
     "labels.visaCode": "Kód víza",
-    "ph.visaCode": "Např. ABC123",
+    "ph.visaCode": "Např. D/VC/-/-/-",
     "errors.visaCode": "Zadejte prosím kód víza",
 
     "upload.button": "Nahrát soubor",
